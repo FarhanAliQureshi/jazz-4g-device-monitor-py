@@ -7,6 +7,8 @@ Jazz 4G WiFi Device Monitoring Desktop App written using Python.
 git clone https://github.com/FarhanAliQureshi/jazz-4g-device-monitor-py.git
 cd jazz-4g-device-monitor-py
 ```
+> [!NOTE]
+> I used Python 3.14.7 while I was writing this program.
 
 ## Python Virtual Environment
 ### For Linux:
