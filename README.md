@@ -13,9 +13,9 @@ cd jazz-4g-device-monitor-py
 ## Python Virtual Environment
 ### For Linux:
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 ### For Windows:
 ```cmd
