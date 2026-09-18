@@ -193,3 +193,10 @@ pyrightconfig.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python
+
+### START - Added by Farhan
+# Ignore the virtual environment
+venv/
+.venv/
+env/
+### END - Added by Farhan
