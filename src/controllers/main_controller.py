@@ -14,16 +14,26 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-from src.controllers.main_controller import MainController
 from src.models.data_model import DataModel
 from src.views.main_view import MainView
 
 
-def main():
-    model = DataModel()
-    view = MainView()
-    controller = MainController(model, view)  # noqa: F841
-    view.mainloop()
+class MainController:
+    def __init__(self, model: DataModel, view: MainView):
+        self.model = model
+        self.view = view
+        self.bind_callbacks()
 
-if __name__ == "__main__":
-    main()
+    def bind_callbacks(self):
+        self.view.bind_call_home(self.handle_call_home)
+        self.view.bind_call_title(self.handle_call_title)
+
+    def handle_call_home(self):
+        raw_data = self.model.get_home_raw_data()
+        self.view.update_source(self.model.source_url)
+        self.view.update_output(raw_data)
+
+    def handle_call_title(self):
+        raw_data = self.model.get_title_raw_data()
+        self.view.update_source(self.model.source_url)
+        self.view.update_output(raw_data)
