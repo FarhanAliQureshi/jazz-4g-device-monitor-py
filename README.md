@@ -24,5 +24,19 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+# Run
+### For Linux:
+```bash
+cd jazz-4g-device-monitor-py
+source .venv/bin/activate
+python3 main.py
+```
+### For Windows:
+```cmd
+cd jazz-4g-device-monitor-py
+.venv\Scripts\activate
+python main.py
+```
+
 # License
 Copyright © Farhan Ali Qureshi. All rights reserved. Read the [GPLv3 LICENSE](LICENSE) file for details.
