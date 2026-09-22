@@ -39,7 +39,13 @@ class MainView(tk.Tk):
         self.call_home_btn.pack(side=tk.LEFT, padx=5, expand=True, fill=tk.X)
 
         self.call_title_btn = tk.Button(self.button_frame, text="Call /mark_title.w.xml")
-        self.call_title_btn.pack(side=tk.RIGHT, padx=5, expand=True, fill=tk.X)
+        self.call_title_btn.pack(side=tk.LEFT, padx=5, expand=True, fill=tk.X)
+
+        self.call_model_home_btn = tk.Button(self.button_frame, text="Display MarkHome API")
+        self.call_model_home_btn.pack(side=tk.LEFT, padx=5, expand=True, fill=tk.X)
+
+        self.call_model_title_btn = tk.Button(self.button_frame, text="Display MarkTitle API")
+        self.call_model_title_btn.pack(side=tk.LEFT, padx=5, expand=True, fill=tk.X)
 
     def update_output(self, text: str):
         self.text_box.delete("1.0", "end")
@@ -54,4 +60,10 @@ class MainView(tk.Tk):
 
     def bind_call_title(self, callback):
         self.call_title_btn.config(command=callback)
+
+    def bind_call_model_home(self, callback):
+        self.call_model_home_btn.config(command=callback)
+
+    def bind_call_model_title(self, callback):
+        self.call_model_title_btn.config(command=callback)
         
