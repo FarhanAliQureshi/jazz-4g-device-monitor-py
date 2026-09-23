@@ -21,7 +21,7 @@ class XmlBaseModel:
     _data: str
     _root: ET.ElementTree
 
-    def __init__(self, data: str | None):
+    def __init__(self, data: str | None = None):
         self._data = None
         self._root = None
         if data:
@@ -37,19 +37,19 @@ class XmlBaseModel:
 
     @raw_data.setter
     def raw_data(self, data: str) -> None:
-        if not data:
+        if not data or not data.strip():
             raise ValueError("No data supplied for XML Parser")
         
-        self._raw_data = data
+        self._data = data
         try:
-            self._root = ET.fromstring(self._raw_data)
+            self._root = ET.fromstring(self._data)
         except ET.ParseError as e:
             raise RuntimeError(f"Error parsing raw data: {e}")
 
     def get_key_value(self, key_name: str) -> str:
-        if not self._root:
+        if self._root is None:
             raise RuntimeError("Load data before calling for the value of a key")
-        if not key_name:
+        if not key_name or not key_name.strip():
             raise ValueError("Expected Key Name for ElementTree search")
         
         key = self._root.find(key_name)

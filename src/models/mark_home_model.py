@@ -18,14 +18,13 @@ from src.models.xml_base_model import XmlBaseModel
 
 
 class MarkHomeModel(XmlBaseModel):
-    def __init__(self, data: str | None):
-        super().__init__(None)
-        self.reset()
-        if data:
-            self.process_data(data)
+    def __init__(self, data: str | None = None):
+        super().__init__(data)
+        self._set_defaults()
+        if self._root is not None:
+            self.process_data()
 
-    def reset(self):
-        super().reset()
+    def _set_defaults(self):
         self.networkmode = 0
         self.modem_mode = 0
         self.op_mode = ""
@@ -43,12 +42,17 @@ class MarkHomeModel(XmlBaseModel):
         self.rx = ""
         self.active_time = ""
 
-    def process_data(self, data: str):
-        if not data:
-            raise ValueError("Must provide raw data from API")
+    def reset(self):
+        super().reset()
+        self._set_defaults()
 
-        self.reset()
-        self.raw_data = data
+    def process_data(self, data: str | None = None):
+        if data and data.strip():
+            self.reset()
+            self.raw_data = data
+
+        if self._root is None:
+            raise ValueError("Must provide raw data from API")
 
         self.networkmode = int(self.get_key_value("divice/networkmode"))
         self.modem_mode = int(self.get_key_value("divice/modem_mode"))
@@ -66,4 +70,3 @@ class MarkHomeModel(XmlBaseModel):
         self.tx = self.get_key_value("tx")
         self.rx = self.get_key_value("rx")
         self.active_time = self.get_key_value("active_time")
-

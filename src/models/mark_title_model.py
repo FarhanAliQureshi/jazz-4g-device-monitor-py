@@ -18,14 +18,13 @@ from src.models.xml_base_model import XmlBaseModel
 
 
 class MarkTitleModel(XmlBaseModel):
-    def __init__(self, data: str | None):
-        super().__init__(None)
-        self.reset()
-        if data:
-            self.process_data(data)
+    def __init__(self, data: str | None = None):
+        super().__init__(data)
+        self._set_defaults()
+        if self._root is not None:
+            self.process_data()
 
-    def reset(self):
-        super().reset()
+    def _set_defaults(self):
         self.timeout = 0
         self.login = 0
         self.lang = ""
@@ -52,12 +51,17 @@ class MarkTitleModel(XmlBaseModel):
         self.swver = ""
         self.cup = 0
 
-    def process_data(self, data: str):
-        if not data:
-            raise ValueError("Must provide raw data from API")
+    def reset(self):
+        super().reset()
+        self._set_defaults()
 
-        self.reset()
-        self.raw_data = data
+    def process_data(self, data: str | None = None):
+        if data and data.strip():
+            self.reset()
+            self.raw_data = data
+
+        if self._root is None:
+            raise ValueError("Must provide raw data from API")
 
         self.timeout = int(self.get_key_value("timeout"))
         self.login = int(self.get_key_value("login"))
