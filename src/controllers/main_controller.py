@@ -15,7 +15,8 @@
 #
 
 from src.models.data_model import DataModel
-from src.models.xml_model import MarkHomeModel, MarkTitleModel
+from src.models.mark_home_model import MarkHomeModel
+from src.models.mark_title_model import MarkTitleModel
 from src.views.main_view import MainView
 
 

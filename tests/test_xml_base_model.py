@@ -16,7 +16,7 @@
 
 import unittest
 
-from src.models.xml_model import XmlBaseModel
+from src.models.xml_base_model import XmlBaseModel
 
 
 class TestXmlModel(unittest.TestCase):

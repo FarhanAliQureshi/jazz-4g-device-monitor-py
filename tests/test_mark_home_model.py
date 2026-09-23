@@ -16,7 +16,7 @@
 
 import unittest
 
-from src.models.xml_model import MarkHomeModel
+from src.models.mark_home_model import MarkHomeModel
 
 
 class TestHomeModel(unittest.TestCase):

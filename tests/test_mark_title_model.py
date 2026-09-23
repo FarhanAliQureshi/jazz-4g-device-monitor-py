@@ -16,7 +16,7 @@
 
 import unittest
 
-from src.models.xml_model import MarkTitleModel
+from src.models.mark_title_model import MarkTitleModel
 
 
 class TestTitleModel(unittest.TestCase):
