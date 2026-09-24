@@ -15,21 +15,20 @@
 #
 
 import xml.etree.ElementTree as ET
+from datetime import datetime
 
 
 class XmlBaseModel:
-    _data: str
-    _root: ET.ElementTree
-
     def __init__(self, data: str | None = None):
-        self._data = None
-        self._root = None
+        self.reset()
         if data:
             self.raw_data = data
 
     def reset(self):
-        self._data = None
-        self._root = None
+        self._data: str = None
+        self._root: ET.ElementTree = None
+        self.source_url: str = ""
+        self.datetime_stamp: datetime = None
 
     @property
     def raw_data(self) -> str:

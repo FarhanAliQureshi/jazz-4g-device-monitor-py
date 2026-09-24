@@ -15,10 +15,8 @@
 #
 
 from src.models.data_model import DataModel
-from src.models.mark_home_model import MarkHomeModel
-from src.models.mark_title_model import MarkTitleModel
 from src.views.main_view import MainView
-
+from datetime import datetime
 
 class MainController:
     def __init__(self, model: DataModel, view: MainView):
@@ -33,20 +31,26 @@ class MainController:
         self.view.bind_call_model_title(self.handle_call_model_title)
 
     def handle_call_home(self):
-        raw_data = self.model.get_home_raw_data()
-        self.view.update_source(self.model.source_url)
-        self.view.update_output(raw_data)
+        home_model = self.model.get_home_model()
+        self.view.update_source(home_model.source_url)
+        self.view.update_output(home_model.raw_data)
 
     def handle_call_title(self):
-        raw_data = self.model.get_title_raw_data()
-        self.view.update_source(self.model.source_url)
-        self.view.update_output(raw_data)
+        title_model = self.model.get_title_model()
+        self.view.update_source(title_model.source_url)
+        self.view.update_output(title_model.raw_data)
 
     def handle_call_model_home(self):
-        raw_data = self.model.get_home_raw_data()
-        self.view.update_source(self.model.source_url)
-        home = MarkHomeModel(raw_data)
+        try:
+            home = self.model.get_home_model()
+        except Exception as e:  # noqa: BLE001
+            self.view.update_source("")
+            self.view.update_output(f"ERROR: {e}")
+            return
+
+        self.view.update_source(home.source_url)
         output = []
+        output.append(f"Log Date Time: {home.datetime_stamp}")
         output.append(f"Network Mode: {home.networkmode}")
         output.append(f"Modem Mode: {home.modem_mode}")
         output.append(f"Operation Mode: {home.op_mode}")
@@ -66,10 +70,19 @@ class MainController:
         self.view.update_output("\n".join(output))
 
     def handle_call_model_title(self):
-        raw_data = self.model.get_title_raw_data()
-        self.view.update_source(self.model.source_url)
-        title = MarkTitleModel(raw_data)
+        try:
+            title = self.model.get_title_model()
+        except Exception as e:  # noqa: BLE001
+            self.view.update_source("")
+            output = []
+            output.append(f"Log Date Time: {datetime.now()}")  # noqa: DTZ005
+            output.append(f"ERROR: {e}")
+            self.view.update_output("\n".join(output))
+            return
+
+        self.view.update_source(title.source_url)        
         output = []
+        output.append(f"Log Date Time: {title.datetime_stamp}")
         output.append(f"Timeout: {title.timeout}")
         output.append(f"Login: {title.login}")
         output.append(f"Language: {title.lang}")

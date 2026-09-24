@@ -14,82 +14,33 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-import time
-
-import requests
-
 from src.models.mark_home_model import MarkHomeModel
 from src.models.mark_title_model import MarkTitleModel
+from src.models.router_api_model import RouterApiModel
 
 
 class DataModel:
     def __init__(self):
-        self._base_url = "http://jazz.wifi"     # Or try "http://192.168.1.1"
-        self._home_api_path = "/mark_home.w.xml"
-        self._title_api_path = "/mark_title.w.xml"
-        self._source_url = ""           # NOTE: Temporary, remove after testing
-        self._raw_output = ""           # NOTE: Temporary, remove after testing
-        self._api_error = False         # NOTE: Temporary, remove after testing
-        self._api_error_message = ""    # NOTE: Temporary, remove after testing
+        self.api_model = RouterApiModel()
 
-    def __generate_timestamp(self) -> str:
-        timestamp = int(time.time() * 1000)
-        return str(timestamp)
-
-    def get_home_raw_data(self) -> str:
-        self._raw_output = self._get_raw_router_stats(self._base_url, self._home_api_path)
-        return self._raw_output
-
-    def get_title_raw_data(self) -> str:
-        self._raw_output = self._get_raw_router_stats(self._base_url, self._title_api_path)
-        return self._raw_output
-
-    # NOTE: Temporary, remove after testing
-    @property
-    def source_url(self) -> str:
-        return self._source_url
-
-    def _get_raw_router_stats(self, base_url: str, api_path: str) -> str:
-        session = requests.Session()
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Accept": "application/xml, text/xml, */*; q=0.01",
-            "X-Requested-With": "XMLHttpRequest",
-            "Referer": base_url
-        }
-
-        timestamp = self.__generate_timestamp()
-        url = f"{base_url}{api_path}?_={timestamp}"
-        self._source_url = url      # NOTE: Temporary for testing
+    def get_home_model(self) -> MarkHomeModel:
+        xml_data = self.api_model.get_home_api_data()
+        if self.api_model.api_error:
+            raise RuntimeError(self.api_model.api_error_message)
         
-        try:
-            response = session.get(url, headers=headers, timeout=5)
+        model = MarkHomeModel(xml_data)
+        model.source_url = self.api_model.api_url
+        model.datetime_stamp = self.api_model.datetime_stamp
 
-            if response.status_code == 200:
-                # print(response.text)
-                self._api_error = False
-                self._api_error_message = ""
-                return response.text
-            else:
-                # print(f"Failed to pull data. HTTP Status: {response.status_code}")
-                self._api_error = True
-                self._api_error_message = f"Failed to pull data. HTTP Status: {response.status_code}"
-                return self._api_error_message
+        return model
 
-        except Exception as e:  # noqa: BLE001
-            # print(f"Connection error: {e}")
-            self._api_error = True
-            msg = f"Connection error: {e}"
-            self._api_error_message = msg
-            return msg
+    def get_title_model(self) -> MarkTitleModel:
+        xml_data = self.api_model.get_title_api_data()
+        if self.api_model.api_error:
+            raise RuntimeError(self.api_model.api_error_message)
+        
+        model = MarkTitleModel(xml_data)
+        model.source_url = self.api_model.api_url
+        model.datetime_stamp = self.api_model.datetime_stamp
 
-
-    def get_mark_home(self) -> MarkHomeModel:
-        raw_data = self.get_home_raw_data()
-        data = MarkHomeModel(raw_data)
-        return data
-
-    def get_mark_title(self) -> MarkTitleModel:
-        raw_data = self.get_title_raw_data()
-        data = MarkTitleModel(raw_data)
-        return data
+        return model
